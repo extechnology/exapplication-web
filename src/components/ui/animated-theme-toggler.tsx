@@ -20,18 +20,20 @@ export const AnimatedThemeToggler = ({
   const [isDark, setIsDark] = useState(false)
   const buttonRef = useRef<HTMLButtonElement>(null)
 
-
   useEffect(() => {
-    
     const savedTheme = localStorage.getItem("theme")
 
-    if (savedTheme === "dark") {
+    // Default to dark if no theme is saved
+    const isDarkMode = savedTheme === "dark" || savedTheme === null
+
+    if (isDarkMode) {
       document.documentElement.classList.add("dark")
-      setIsDark(true)
+      localStorage.setItem("theme", "dark")
     } else {
       document.documentElement.classList.remove("dark")
-      setIsDark(false)
     }
+
+    setIsDark(isDarkMode)
 
     const updateTheme = () => {
       setIsDark(document.documentElement.classList.contains("dark"))
@@ -45,6 +47,7 @@ export const AnimatedThemeToggler = ({
 
     return () => observer.disconnect()
   }, [])
+
 
 
   const toggleTheme = useCallback(async () => {
