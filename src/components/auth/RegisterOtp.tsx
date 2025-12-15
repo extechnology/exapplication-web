@@ -182,7 +182,7 @@ export default function OtpModal({ isOpen, setIsOpen, RegisterData, reset }: Reg
 
                 <DialogOverlay />
 
-                <DialogContent onInteractOutside={(event) => event.preventDefault()} className="p-0 max-w-md h-full sm:h-auto items-center overflow-hidden rounded-3xl border-0 shadow-xl">
+                <DialogContent onInteractOutside={(event) => event.preventDefault()} className="bg-black p-0 max-w-md h-full sm:h-auto items-center overflow-hidden rounded-3xl border-0 shadow-xl">
 
 
                     <div className="p-6">
@@ -192,7 +192,7 @@ export default function OtpModal({ isOpen, setIsOpen, RegisterData, reset }: Reg
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="text-center mb-6"
+                            className="text-center mb-6 text-white"
                         >
                             <h2 className="text-2xl font-bold flex items-center justify-center">Verification Required <ShieldCheck size={26} className="ml-2" /></h2>
                             <p className="text-gray-500 mt-2">
@@ -231,7 +231,7 @@ export default function OtpModal({ isOpen, setIsOpen, RegisterData, reset }: Reg
                                                                 >
                                                                     <InputOTPSlot
                                                                         index={index}
-                                                                        className="w-12 h-14 text-lg rounded-xl border border-gray-400 shadow-sm"
+                                                                        className="w-12 h-14 text-lg rounded-xl border border-gray-400 shadow-sm text-white"
                                                                     />
                                                                 </motion.div>
                                                             ))}
