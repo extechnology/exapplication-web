@@ -1,5 +1,5 @@
-import { useInfiniteQuery } from "@tanstack/react-query";
-import { GetSearchApi } from "./SearchApi";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
+import { GetSearchApi, GetSearchPreviewApi } from "./SearchApi";
 
 
 
@@ -13,9 +13,9 @@ export const useSearchInfinite = (q: string, tab: string) => {
         queryKey: ["search", q, tab],
 
 
-        queryFn: ({ pageParam }) =>
+        queryFn: async ({ pageParam }) =>
             
-        GetSearchApi(q, tab, pageParam),
+        await GetSearchApi(q, tab, pageParam),
 
         initialPageParam: { people: 1, posts: 1 },
 
@@ -36,4 +36,27 @@ export const useSearchInfinite = (q: string, tab: string) => {
         retry: 1,
         refetchOnWindowFocus: false,
     });
+};
+
+
+
+
+// Get Search Preview 
+export const useSearchPreview = (q: string) => {
+
+    return useQuery({
+
+        queryKey: ["search-preview", q],
+        
+        queryFn : async () => {
+
+            return await GetSearchPreviewApi(q);
+        },
+
+        staleTime: 5 * 60 * 1000,
+        retry: 1,
+        refetchOnWindowFocus: false,
+    
+    });
+
 };

@@ -3,10 +3,21 @@ import { SearchCursorType } from "./types";
 
 
 // Get Search Result
-export const GetSearchApi = async (q: string, tab: string , cursor?: SearchCursorType) => {
+export const GetSearchApi = async (q: string, tab: string, cursor?: SearchCursorType) => {
 
-    const params = new URLSearchParams({ q, tab , cursor: JSON.stringify(cursor) });
+    const params = new URLSearchParams({ q, tab, cursor: JSON.stringify(cursor) });
 
-    return await CommonApi("GET", `/user/profile/?${params.toString()}`);
+    return await CommonApi("GET", `/user/search/?${params.toString()}`);
+
+}
+
+
+
+// Get Search Preview 
+export const GetSearchPreviewApi = async (q: string) => {
+
+    const params = new URLSearchParams({q})
+
+    return await CommonApi("GET", `/user/search/preview/?${params.toString()}`);
 
 }

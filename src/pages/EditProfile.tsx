@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import { User, CircleCheckBig, Loader } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { ProfessionalTitleSearch } from "@/components/profile/editprofile/ProfessionalTitleSearch";
 import { useEditProfileForm } from "@/hooks/profile/useEditProfileForm";
 import ErrorUi from "@/components/loaders/ErrorUi";
 import EditProfileSkeleton from "@/components/loaders/profile/EditLoader";
@@ -13,7 +14,7 @@ import Website from "@/components/profile/editprofile/Website";
 import Username from "@/components/profile/editprofile/Username";
 import DateOfBirth from "@/components/profile/editprofile/DateOfBirth";
 import DisplayName from "@/components/profile/editprofile/DisplayName";
-import { ProfessionalTitleSearch } from "@/components/profile/editprofile/ProfessionalTitleSearch";
+
 
 
 
@@ -140,11 +141,13 @@ const EditProfile = () => {
                         </CardHeader>
 
                         <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-6 px-4">
+
                             {/* Date of Birth */}
                             <DateOfBirth form={form} />
 
                             {/* Gender */}
                             <Gender form={form} />
+                            
                         </CardContent>
 
                     </Card>
@@ -161,7 +164,7 @@ const EditProfile = () => {
                         <Button
                             type="submit"
                             variant="default"
-                            className="dark:bg-white hover:cursor-pointer"
+                            className="bg-white text-black border hover:bg-gray-100 hover:cursor-pointer"
                             disabled={
                                 isPending ||
                                 !form.formState.isValid ||

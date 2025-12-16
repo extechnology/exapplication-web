@@ -1,9 +1,10 @@
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { ProfileFormValues } from "@/schemas/profileSchema";
-import { Popover, PopoverContent, PopoverTrigger } from "@radix-ui/react-popover";
+
 import { CalendarIcon } from "lucide-react";
 import { useState } from "react";
 import { UseFormReturn } from "react-hook-form";
@@ -21,7 +22,7 @@ export default function DateOfBirth({ form }: Props) {
 
     // State for date picker
     const [open, setOpen] = useState<boolean>(false);
-
+    
 
     return (
 
@@ -80,6 +81,7 @@ export default function DateOfBirth({ form }: Props) {
                         </Popover>
 
                         <FormMessage />
+
                     </FormItem>
                 );
             }}

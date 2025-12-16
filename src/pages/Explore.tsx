@@ -13,7 +13,7 @@ import { Search } from "lucide-react";
 
 
 
-export default function SearchResult() {
+export default function Explore() {
 
 
 
@@ -42,7 +42,7 @@ export default function SearchResult() {
   return (
 
 
-    <section aria-label="Search Results" className="w-full mx-auto px-4 sm:px-8 pt-6 pb-20 min-h-screen">
+    <section aria-label="Search Results" className="w-full mx-auto px-4 sm:px-8 pt-0 pb-20 min-h-screen">
 
 
       <div className="flex flex-col gap-6">
@@ -50,15 +50,17 @@ export default function SearchResult() {
 
 
         {/* Search Header */}
-        <div className="flex flex-col gap-2 pb-2">
-          <div className="flex items-center gap-2 text-muted-foreground/80">
-            <Search className="w-4 h-4" />
-            <span className="text-xs font-semibold uppercase tracking-widest">Search</span>
+        {query &&
+          <div className="flex flex-col gap-2 pb-2 pt-6">
+            <div className="flex items-center gap-2 text-muted-foreground/80">
+              <Search className="w-4 h-4" />
+              <span className="text-xs font-semibold uppercase tracking-widest">Search</span>
+            </div>
+            <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-foreground">
+              Results for <span className="text-primary">"{query}"</span>
+            </h1>
           </div>
-          <h1 className="text-2xl md:text-4xl font-bold tracking-tight text-foreground">
-            Results for <span className="text-primary">"{query}"</span>
-          </h1>
-        </div>
+        }
 
 
         <Tabs value={tab} onValueChange={handleTabChange} className="w-full space-y-2">
