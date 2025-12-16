@@ -14,11 +14,10 @@ const ForgotPassword = lazy(() => import("./pages/ForgotPassword"))
 const Profile = lazy(() => import("./pages/Profile"))
 const UsersProfile = lazy(() => import("./pages/UsersProfile"))
 const EditProfile = lazy(() => import("./pages/EditProfile"))
-const PeoplePage = lazy(() => import("./pages/PeoplePage"))
 const Notifcation = lazy(() => import("./pages/Notification"))
 const CreatePost = lazy(() => import("./pages/CreatePost"))
 const Settings = lazy(() => import("./pages/Settings"))
-const Search = lazy(() => import("./pages/SearchResult"))
+const Explore = lazy(() => import("./pages/Explore"))
 const NotFound = lazy(() => import("./pages/NotFound"))
 
 
@@ -57,16 +56,13 @@ function App() {
 
             <Route path="edit-profile" element={<EditProfile />} />
 
-            <Route path="people" element={<PeoplePage />} />
-
             <Route path="create" element={<CreatePost />} />
 
             <Route path="notifications" element={<Notifcation />} />
 
             <Route path="settings" element={<Settings />} />
 
-            <Route path="search" element={<Search />} />
-
+            <Route path="explore" element={<Explore />} />
 
           </Route>
 

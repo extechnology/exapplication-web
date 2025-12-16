@@ -74,7 +74,7 @@ export default function SearchBar() {
 
     const handleSelect = (q: string, tab?: string) => {
         setOpen(false);
-        navigate(`/search?q=${encodeURIComponent(q)}${tab ? `&tab=${tab}` : ''}`);
+        navigate(`/explore?q=${encodeURIComponent(q)}${tab ? `&tab=${tab}` : ''}`);
     };
 
 

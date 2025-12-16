@@ -34,7 +34,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean,
 
   const navItems = [
     { name: t("home"), path: "/", icon: Home },
-    { name: t("explore"), path: "/people", icon: Telescope },
+    { name: t("explore"), path: "/explore", icon: Telescope },
     { name: t("notifications"), path: "/notifications", icon: Bell },
     { name: t("create"), path: "/create", icon: ImagePlus },
     { name: t("settings"), path: "/settings", icon: Settings },

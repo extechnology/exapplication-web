@@ -117,6 +117,7 @@ export const useEditProfileForm = () => {
     // Submit Handler
     const onSubmit = (data: ProfileFormValues) => {
 
+
         const formData = new FormData();
 
         formData.append("username", data.username);
@@ -135,7 +136,15 @@ export const useEditProfileForm = () => {
             formData.append("background_image", data.background_image);
         }
 
-        editUserProfile(formData);
+        editUserProfile(formData, {
+
+            onSuccess: () => {
+
+                form.reset();
+
+            }
+
+        });
 
     };
 

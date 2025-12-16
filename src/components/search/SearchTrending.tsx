@@ -33,7 +33,7 @@ export default function SearchTrending() {
 
 
     const trendingPeople = searchDummy.people.slice(0, 5);
-    const trendingPosts = searchDummy.media.slice(0, 8); // Show more posts for the grid
+    const trendingPosts = searchDummy.media.slice(0, 8);
 
 
 
@@ -42,7 +42,7 @@ export default function SearchTrending() {
 
 
 
-        <div className="space-y-12 animate-in fade-in duration-700 pb-32">
+        <div className="space-y-12 animate-in fade-in duration-700 pb-5">
 
 
 
