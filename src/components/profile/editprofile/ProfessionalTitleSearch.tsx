@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { debounce } from "@/lib/debounce";
+import { useDebounce } from "@/hooks/useDebounce";
 import { useGetProfessionalTitle } from "@/services/profile/useProfile";
 import { ChevronsUpDown, Check } from "lucide-react";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, } from "@/components/ui/command";
@@ -9,7 +9,6 @@ import { FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/for
 import { FormControl } from "@/components/ui/form";
 import { UseFormReturn } from "react-hook-form";
 import { ProfileFormValues } from "@/schemas/profileSchema";
-
 
 
 
@@ -30,7 +29,7 @@ export const ProfessionalTitleSearch = ({ form }: Props) => {
 
 
     // Create a stable debounced setter (runs after 500ms)
-    const debouncedSearch = useMemo(() => debounce(setSearch, 500), []);
+    const debouncedSearch = useMemo(() => useDebounce(setSearch, 500), []);
 
 
 
@@ -43,9 +42,8 @@ export const ProfessionalTitleSearch = ({ form }: Props) => {
     const [open, setOpen] = useState(false);
 
 
+
     return (
-
-
         <FormField
             control={form.control}
             name="designation"
@@ -111,7 +109,5 @@ export const ProfessionalTitleSearch = ({ form }: Props) => {
                 </FormItem>
             )}
         />
-
     );
-
 };

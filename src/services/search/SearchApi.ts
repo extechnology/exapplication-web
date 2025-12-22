@@ -18,6 +18,6 @@ export const GetSearchPreviewApi = async (q: string) => {
 
     const params = new URLSearchParams({q})
 
-    return await CommonApi("GET", `/user/search/preview/?${params.toString()}`);
+    return await CommonApi("GET", `/feed/user-search-preview/?${params.toString()}`);
 
 }

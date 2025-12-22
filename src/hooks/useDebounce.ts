@@ -1,13 +1,12 @@
 
 
-export function debounce<F extends (...args: any[]) => void>(func: F, wait: number) {
+export function useDebounce<F extends (...args: any[]) => void>(func: F, wait: number) {
 
-    let timeout: NodeJS.Timeout;
+    let timeout: ReturnType<typeof setTimeout>;
 
     return (...args: Parameters<F>) => {
 
         clearTimeout(timeout);
-
         timeout = setTimeout(() => func(...args), wait);
 
     };

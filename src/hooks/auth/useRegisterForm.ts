@@ -2,7 +2,7 @@ import { useCallback, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRegister, useCheckIndentifier, usecheckUsername } from "@/services/auth/useAuth";
-import { debounce } from "@/lib/debounce";
+import { useDebounce } from "../useDebounce";
 import { toast } from "sonner";
 import { RegisterSchema, RegisterValues } from "@/schemas/authSchema";
 
@@ -21,6 +21,7 @@ export const useRegisterForm = () => {
     const { mutate: RegisterUser, isPending } = useRegister();
 
 
+
     // Debounced state
     const [debouncedUsername, setDebouncedUsername] = useState("");
     const [debouncedIdentifier, setDebouncedIdentifier] = useState("");
@@ -28,14 +29,15 @@ export const useRegisterForm = () => {
 
 
     // Debounce handlers
-    const debounceUsername = useCallback(debounce((val: string) => setDebouncedUsername(val), 500), []);
-    const debounceIdentifier = useCallback(debounce((val: string) => setDebouncedIdentifier(val), 500), []);
+    const debounceUsername = useCallback(useDebounce((val: string) => setDebouncedUsername(val), 500), []);
+    const debounceIdentifier = useCallback(useDebounce((val: string) => setDebouncedIdentifier(val), 500), []);
 
 
 
     // Use React Query hooks
     const { data: usernameData, isFetching: usernameLoading, isError: usernameError } = usecheckUsername(debouncedUsername);
     const { data: IndentifierData, isFetching: IdentifierLoading, isError: IdentifierError } = useCheckIndentifier(debouncedIdentifier);
+
 
 
 
@@ -48,9 +50,10 @@ export const useRegisterForm = () => {
 
 
 
+
     // Handle request for Register OTP
     const onSubmit = (data: RegisterValues) => {
-        
+
         const formdata = new FormData();
 
         formdata.append("identifier", data.identifier);
@@ -73,6 +76,7 @@ export const useRegisterForm = () => {
 
 
 
+
     return {
         form,
         onSubmit,
@@ -88,4 +92,6 @@ export const useRegisterForm = () => {
         debounceUsername,
         debounceIdentifier
     };
+
+    
 };

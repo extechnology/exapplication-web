@@ -1,10 +1,10 @@
 import { Input } from "@/components/ui/input";
 import SearchDropdown from "./SearchDropdown";
-import { useState, useRef, useEffect } from "react";
-import { searchDummy } from "@/lib/searchDummy";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { Search, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { useDebounce } from "@/hooks/useDebounce";
 
 
 
@@ -13,12 +13,20 @@ export default function SearchBar() {
 
 
 
-    const [query, setQuery] = useState("");
-    const [open, setOpen] = useState(false);
-    const [selectedIndex, setSelectedIndex] = useState(-1);
+
+    // State Management
+    const [query, setQuery] = useState<string>("");
+    const [inputValue, setInputValue] = useState("");
+    const [open, setOpen] = useState<boolean>(false);
     const containerRef = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
     const navigate = useNavigate();
+
+
+
+    // Create a stable debounced setter (runs after 500ms)
+    const debouncedSearch = useMemo(() => useDebounce((value: string) => { setQuery(value); }, 500), []);
+
 
 
 
@@ -29,6 +37,7 @@ export default function SearchBar() {
         "Find viral videos...",
         "Search for creators..."
     ];
+
 
 
     const [placeholderIndex, setPlaceholderIndex] = useState(0);
@@ -44,38 +53,13 @@ export default function SearchBar() {
 
 
 
-
-    // Filter Data
-    const filteredPeople = searchDummy.people.map(p => ({ ...p, type: 'people' })).filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-    const filteredMedia = searchDummy.media.map(m => ({ ...m, type: 'media' })).filter(m => m.title.toLowerCase().includes(query.toLowerCase()));
-
-
-
-
-    // Restore Requests: Suggestions & History mapping
-    const rawSuggestions = searchDummy.suggestions.filter(s => s.toLowerCase().includes(query.toLowerCase())).map((s, i) => ({ type: 'suggestion', id: `s-${i}`, label: s, value: s }));
-
-
-
-    // Add "Search for [query]" at the top if there is a query
-    const suggestions = query ? [{ type: 'current_query', id: 'current', label: query, value: query }, ...rawSuggestions] : rawSuggestions;
-
-
-
-    const history = searchDummy.history.filter(h => h.toLowerCase().includes(query.toLowerCase())).map((h, i) => ({ type: 'history', id: `h-${i}`, label: h }));
-
-
-
-    // Combine flat list for keyboard navigation (prioritizing history/suggestions if query matches, or just general)
-    const flatList = [...history, ...suggestions, ...filteredPeople, ...filteredMedia];
-    const activeItem = selectedIndex >= 0 ? flatList[selectedIndex] : undefined;
-
-
-
+    // Handle Select search query
     const handleSelect = (q: string, tab?: string) => {
         setOpen(false);
+        setQuery(q);
         navigate(`/explore?q=${encodeURIComponent(q)}${tab ? `&tab=${tab}` : ''}`);
     };
+
 
 
 
@@ -90,29 +74,6 @@ export default function SearchBar() {
         return () => document.removeEventListener("mousedown", handleClickOutside);
     }, []);
 
-
-
-
-    // Keyboard Navigation
-    const handleKeyDown = (e: React.KeyboardEvent) => {
-        if (e.key === "ArrowDown") {
-            e.preventDefault();
-            setSelectedIndex(prev => prev < flatList.length - 1 ? prev + 1 : prev);
-        } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            setSelectedIndex(prev => prev > 0 ? prev - 1 : prev);
-        } else if (e.key === "Enter") {
-            if (activeItem) {
-                // If item selected, go to type
-                const label = (activeItem as any).label || (activeItem as any).name || (activeItem as any).title || query;
-                const type = activeItem.type === 'people' ? 'people' : activeItem.type === 'media' ? 'posts' : undefined;
-                handleSelect(label, type);
-            } else if (query) {
-                setOpen(false);
-                navigate(`/search?q=${encodeURIComponent(query)}`);
-            }
-        }
-    };
 
 
 
@@ -131,7 +92,6 @@ export default function SearchBar() {
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500 opacity-30 blur-md animate-pulse" />
 
 
-
                 {/* Inner Background */}
                 <div className="relative bg-background/80 backdrop-blur-xl rounded-full flex items-center z-10 px-4 h-12 ring-1 ring-white/10 group-focus-within:ring-primary/50 transition-all shadow-lg">
 
@@ -144,19 +104,19 @@ export default function SearchBar() {
                         <Input
                             ref={inputRef}
                             className="h-full border-0 focus-visible:ring-0 p-0 shadow-none bg-transparent placeholder:text-transparent relative z-20 text-foreground text-base"
-                            value={query}
+                            value={inputValue}
                             onChange={(e) => {
-                                setQuery(e.target.value);
+                                const value = e.target.value;
+                                setInputValue(value);      // instant UI update
+                                debouncedSearch(value);    // debounced API/search
                                 setOpen(true);
-                                setSelectedIndex(-1);
                             }}
                             onFocus={() => setOpen(true)}
-                            onKeyDown={handleKeyDown}
                         />
 
 
                         {/* Animated Placeholder */}
-                        {!query && (
+                        {!inputValue && (
                             <div className="absolute inset-0 flex items-center pointer-events-none z-10 pl-1">
                                 <AnimatePresence mode="wait">
                                     <motion.span
@@ -176,19 +136,15 @@ export default function SearchBar() {
                     </div>
 
 
-
-                    {query && (
-                        <button onClick={() => { setQuery(""); inputRef.current?.focus(); }} className="text-muted-foreground hover:text-foreground p-1 hover:bg-muted rounded-full transition-colors">
+                    {inputValue && (
+                        <button onClick={() => { setInputValue(""); setQuery(""); inputRef.current?.focus(); }} className="text-muted-foreground hover:text-foreground p-1 hover:bg-muted rounded-full transition-colors">
                             <X size={16} />
                         </button>
                     )}
 
-
                 </div>
 
-
             </div>
-
 
 
             {/* Search Dropdown */}
@@ -197,13 +153,7 @@ export default function SearchBar() {
                     <SearchDropdown
                         query={query}
                         onSelect={handleSelect}
-                        data={{
-                            suggestions: suggestions,
-                            history: history,
-                            people: filteredPeople,
-                            media: filteredMedia
-                        }}
-                        activeItem={activeItem}
+                        onClose={() => setOpen(false)}
                     />
                 </div>
             )}

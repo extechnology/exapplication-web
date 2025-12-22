@@ -5,14 +5,10 @@ import { cn } from "@/lib/utils";
 
 
 
-
-
 interface PostImage {
     url: string;
     likes: number;
 }
-
-
 
 
 export default function ProfilePosts() {

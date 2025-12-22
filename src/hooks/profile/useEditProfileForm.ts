@@ -3,7 +3,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { usecheckUsername } from "@/services/auth/useAuth";
 import { useGetUserProfile, useEditUserProfile } from "@/services/profile/useProfile";
-import { debounce } from "@/lib/debounce";
+import { useDebounce } from "../useDebounce";
 import { profileFormSchema, ProfileFormValues } from "@/schemas/profileSchema";
 
 
@@ -52,7 +52,7 @@ export const useEditProfileForm = () => {
 
     // Debounce Username Callback
     const debounceUsername = useCallback(
-        debounce((val: string) => {
+        useDebounce((val: string) => {
             if (!val || val === userProfile?.username) return;
             setDebouncedUsername(val);
         }, 500),
