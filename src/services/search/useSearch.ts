@@ -1,5 +1,6 @@
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import { GetSearchApi, GetSearchPreviewApi } from "./SearchApi";
+import type { SearchResponseType } from "./types";
 
 
 
@@ -14,14 +15,14 @@ export const useSearchInfinite = (q: string, tab: string) => {
 
 
         queryFn: async ({ pageParam }) =>
-            
-        await GetSearchApi(q, tab, pageParam),
+
+            await GetSearchApi(q, tab, pageParam),
 
         initialPageParam: { people: 1, posts: 1 },
 
-        
+
         getNextPageParam: (lastPage) => {
-            
+
             const { peopleNextCursor, postsNextCursor } = lastPage.pagination;
 
             if (!peopleNextCursor && !postsNextCursor) return undefined;
@@ -32,7 +33,7 @@ export const useSearchInfinite = (q: string, tab: string) => {
             };
         },
 
-        staleTime: 5 * 60 * 1000,
+        staleTime: 5 * 60 * 1000, // 5 minutes
         retry: 1,
         refetchOnWindowFocus: false,
     });
@@ -44,19 +45,19 @@ export const useSearchInfinite = (q: string, tab: string) => {
 // Get Search Preview 
 export const useSearchPreview = (q: string) => {
 
-    return useQuery({
+    return useQuery<SearchResponseType>({
 
         queryKey: ["search-preview", q],
-        
-        queryFn : async () => {
 
-            return await GetSearchPreviewApi(q);
+        queryFn: async () => {
+
+            return await GetSearchPreviewApi(q) as SearchResponseType;
         },
 
-        staleTime: 5 * 60 * 1000,
+        staleTime: 5 * 60 * 1000, // 5 minutes
         retry: 1,
         refetchOnWindowFocus: false,
-    
+
     });
 
 };

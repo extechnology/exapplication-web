@@ -13,16 +13,39 @@ export interface UserCreditVault {
   user: number;
 }
 
+
+
+export interface UserTotalPosts {
+  unique_id: string;
+  title: string;
+  caption: string;
+  images?: string[];
+  video?: string | null;
+  created_at: string;
+  updated_at: string;
+  username: string;
+  fullname: string | null;
+  profile_picture: string;
+  is_liked: boolean;
+  is_followed: boolean;
+  total_comments: number;
+  total_likes: number;
+  comments: { id: number; comment: string; created_at: string; updated_at: string; user: number; post_video: string }[];
+  likes: { user: string; profile_picture: string }[];
+  type: "image" | "video" | "text";
+}
+
+
+
 export interface UserProfileType {
   id: number;
   username: string;
   user_credit_vault: UserCreditVault;
   followers_count: number;
   following_count: number;
-  user_total_posts: number;
   is_following: boolean;
-  user_posted_images: any[]; 
-  user_posted_videos: any[]; 
+  user_total_posts: UserTotalPosts[];
+  user_total_post_count: number;
   account_id: string;
   designation: string | null;
   bio: string | null;

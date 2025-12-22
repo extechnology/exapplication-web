@@ -8,14 +8,24 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLanguage } from "@/context/LanguageContext";
 import { AnimatedThemeToggler } from "../ui/animated-theme-toggler";
 import NotificationBadge from "./NotificationBadge";
+import { useGetUserProfile } from "@/services/profile/useProfile";
+import SidebarProfileSkeleton from "../loaders/SidebarProfileSkeleton";
+
 
 
 
 export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean, setIsCollapsed: React.Dispatch<React.SetStateAction<boolean>> }) => {
 
 
+
   const { t } = useLanguage();
   const location = useLocation();
+
+
+
+  // User Profile Details
+  const { data: userProfile, isFetching, isLoading, isError } = useGetUserProfile();
+
 
 
   // Auto-collapse for smaller screens
@@ -32,6 +42,9 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean,
 
 
 
+
+
+  // Navigation items
   const navItems = [
     { name: t("home"), path: "/", icon: Home },
     { name: t("explore"), path: "/explore", icon: Telescope },
@@ -39,6 +52,7 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean,
     { name: t("create"), path: "/create", icon: ImagePlus },
     { name: t("settings"), path: "/settings", icon: Settings },
   ];
+
 
 
 
@@ -138,90 +152,97 @@ export const Sidebar = ({ isCollapsed, setIsCollapsed }: { isCollapsed: boolean,
         <div className="border-t border-border/40 p-4 shrink-0">
 
           {/* User PROFILE */}
-          <motion.div
-            layout
-            className="flex items-center justify-between mb-4"
-            transition={{ type: "spring", stiffness: 350, damping: 13 }}
-          >
+          {isLoading || isFetching || isError ? (
 
-            {/* LEFT SIDE PROFILE (container always mounted) */}
-            <motion.div layout className="flex items-center">
+            <SidebarProfileSkeleton isCollapsed={isCollapsed} />
 
-              <AnimatePresence mode="popLayout">
+          ) : (
 
-                {!isCollapsed && (
+            <motion.div
+              layout
+              className="flex items-center justify-between mb-4"
+              transition={{ type: "spring", stiffness: 350, damping: 13 }}
+            >
 
-                  <motion.div
-                    key="expanded-profile"
-                    layout
-                    initial={{ opacity: 0, x: -10 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    exit={{ opacity: 0, x: -10 }}
-                    transition={{ duration: 0.15 }}
-                    className="flex items-center gap-3"
-                  >
+              {/* LEFT SIDE PROFILE (container always mounted) */}
+              <motion.div layout className="flex items-center">
 
-                    <Link
-                      to="/user-profile"
-                      className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition"
+                <AnimatePresence mode="popLayout">
+
+                  {!isCollapsed && (
+
+                    <motion.div
+                      key="expanded-profile"
+                      layout
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: -10 }}
+                      transition={{ duration: 0.15 }}
+                      className="flex items-center gap-3"
                     >
 
-                      <Avatar className="border-2 border-primary/20">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
+                      <Link
+                        to="/user-profile"
+                        className="flex items-center gap-3 p-2 rounded-lg hover:bg-accent transition"
+                      >
 
-                      <div className="flex flex-col">
-                        <span className="text-sm font-semibold">John Doe</span>
-                        <span className="text-xs text-muted-foreground">@johndoe</span>
-                      </div>
+                        <Avatar className="border-2 border-primary/20">
+                          <AvatarImage src={userProfile?.profile_picture ?? "/images.png"} />
+                          <AvatarFallback>{userProfile?.fullname?.charAt(0)}</AvatarFallback>
+                        </Avatar>
 
-                    </Link>
+                        <div className="flex flex-col">
+                          <span className="text-sm font-semibold">{userProfile?.fullname}</span>
+                          <span className="text-xs text-muted-foreground">@{userProfile?.username}</span>
+                        </div>
 
-                  </motion.div>
+                      </Link>
 
-                )}
+                    </motion.div>
 
-              </AnimatePresence>
+                  )}
+
+                </AnimatePresence>
+
+              </motion.div>
+
+
+              {/* RIGHT SIDE ACTIONS (container always mounted) */}
+              <motion.div layout className="flex flex-col gap-3 items-center">
+
+                <AnimatePresence>
+
+                  {isCollapsed && (
+
+                    <motion.div
+                      key="collapsed-avatar"
+                      layout
+                      initial={{ opacity: 0, scale: 0.6 }}
+                      animate={{ opacity: 1, scale: 1 }}
+                      exit={{ opacity: 0, scale: 0.1 }}
+                    >
+
+                      <Link to="/user-profile" className="p-1 rounded-full">
+
+                        <Avatar className="border-1 border-primary/20 h-10 w-10">
+                          <AvatarImage src={userProfile?.profile_picture ?? "/images.png"} />
+                          <AvatarFallback>{userProfile?.fullname?.charAt(0)}</AvatarFallback>
+                        </Avatar>
+                      </Link>
+
+                    </motion.div>
+
+                  )}
+
+                </AnimatePresence>
+
+                <AnimatedThemeToggler className="hover:cursor-pointer" />
+
+              </motion.div>
 
             </motion.div>
 
-
-            {/* RIGHT SIDE ACTIONS (container always mounted) */}
-            <motion.div layout className="flex flex-col gap-3 items-center">
-
-              <AnimatePresence>
-
-                {isCollapsed && (
-
-                  <motion.div
-                    key="collapsed-avatar"
-                    layout
-                    initial={{ opacity: 0, scale: 0.6 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.1 }}
-                  >
-
-                    <Link to="/user-profile" className="p-1 rounded-full">
-
-                      <Avatar className="border-1 border-primary/20 h-10 w-10">
-                        <AvatarImage src="https://github.com/shadcn.png" />
-                        <AvatarFallback>JD</AvatarFallback>
-                      </Avatar>
-                    </Link>
-
-                  </motion.div>
-
-                )}
-
-              </AnimatePresence>
-
-              <AnimatedThemeToggler className="hover:cursor-pointer" />
-
-            </motion.div>
-
-          </motion.div>
-
+          )}
 
 
           {/* COPYRIGHT */}
