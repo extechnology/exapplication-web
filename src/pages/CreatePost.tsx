@@ -1,4 +1,5 @@
-import PostCreator from "@/components/post/PostCreator"
+import PostCreator from "@/components/profile/post/PostCreator"
+
 
 export default function CreatePost() {
 
@@ -11,6 +12,5 @@ export default function CreatePost() {
 
         </>
     )
-
 
 }

@@ -1,5 +1,6 @@
-import PostCard from "@/components/post/PostCard"
-import VideoCard from "@/components/post/VideoCard";
+import PostCard from "@/components/profile/post/PostCard";
+import VideoCard from "@/components/profile/post/VideoCard";
+
 
 
 export default function Feed() {
